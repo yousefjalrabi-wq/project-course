@@ -1,46 +1,88 @@
 ---
-name: Yousef Jihad Alrabi
-neptun: TWIRXA
-id: 2026-NP-02
 project_outline: "[[00-project/01-project-outline]]"
 ---
 
 # Procedural Generation and Automatic Evaluation of Game Levels
 
-## 1. Project Overview
-The project will implement a Python-based tool for generating and evaluating 2D grid-based mazes. Two generation algorithms, Recursive Backtracking and Randomized Prim, will be compared using measurable structural properties and an estimated difficulty score.
+## 1. Actors and permissions
 
-## 2. Maze Representation
-Each maze will be represented as a rectangular grid of cells and walls. A fixed starting cell and goal cell will be used for evaluation. The maze dimensions and random seed will be configurable.
+| Role | Needs | Responsibility / access |
+| --- | --- | --- |
+| User | Generate mazes and see their results | Chooses settings, starts generation, and views measurements |
 
-## 3. Generation Algorithms
-### Recursive Backtracking
-A randomized depth-first search algorithm that creates a maze by visiting neighboring cells and removing walls between them. The implementation will support a configurable preference for continuing in the same direction.
+The first version is a simple Python tool for one user. No accounts or special permissions are needed.
 
-### Randomized Prim
-A maze generation algorithm that starts from one cell and repeatedly connects a frontier cell to the growing maze. Frontier selection will be configurable to investigate its effect on maze structure.
+## 2. Use cases / user stories
 
-## 4. Automatic Evaluation
-The generated mazes will be assessed using:
-- Shortest solution path length between start and goal.
-- Number and proportion of dead ends.
-- Corridor length characteristics.
-- Branching points and branching frequency.
-- Validity and connectivity checks.
+### Generate and evaluate mazes
+- **Actor:** User
+- **Precondition:** The Python program is ready to run.
+- **Main flow:**
+  1. The user chooses Recursive Backtracking or Randomized Prim.
+  2. The user chooses the maze size and a random seed.
+  3. The program generates a 2D grid maze with a start and an exit.
+  4. The program measures the maze's shortest path, dead ends, corridors, and branching.
+  5. The program calculates an estimated difficulty score and shows the results.
+- **Alternative / error flow:** If the maze size or another input is invalid, the program displays an error and asks for a valid value.
+- **Postcondition:** A generated maze and its evaluation results are available.
 
-## 5. Estimated Difficulty
-A compound difficulty score will be investigated using normalized structural measurements. The precise formula and weights will be selected and justified during implementation. The score will be compared with the effort required by a defined maze-solving strategy. It will be treated as an estimate rather than a direct measurement of human difficulty.
+### Compare the two algorithms
+- **Actor:** User
+- **Precondition:** Both algorithms can generate and evaluate mazes.
+- **Main flow:**
+  1. The user selects the settings for a comparison.
+  2. The program generates multiple mazes with each algorithm using recorded random seeds.
+  3. The program calculates the same measurements for every maze.
+  4. The program compares the results, including averages and variation.
+- **Alternative / error flow:** If a run fails, the program reports the problem rather than treating the missing result as valid.
+- **Postcondition:** The user can see how the two algorithms compare.
 
-## 6. Experiments
-Both algorithms will be tested using multiple maze sizes, random seeds, and generation parameter settings. The initial target is 100 mazes per configuration. Results will be summarized using distributions, averages, and variability, with representative maze examples.
+## 3. Functional requirements
 
-## 7. Technologies
-- Python for generation, evaluation, and experiments.
-- GitHub for version control and documentation.
-- Trello for organizing tasks and tracking progress.
+| Requirement | Acceptance criteria | Priority |
+| --- | --- | --- |
+| The user can choose one of two maze-generation algorithms. | The program accepts Recursive Backtracking or Randomized Prim and uses the selected method. | Must |
+| The user can set the maze size and random seed. | The program uses valid input settings and rejects invalid sizes. | Must |
+| The program generates a 2D grid maze. | The generated maze has walls, passages, a start, and an exit. | Must |
+| The program measures the shortest solution path. | The program finds and reports the shortest path from start to exit. | Must |
+| The program measures maze structure. | The program reports dead ends, corridor lengths, and branching points. | Must |
+| The program calculates an estimated difficulty score. | The program applies a clearly explained formula to the measurements and reports the score. | Must |
+| The program compares both algorithms over multiple mazes. | It reports results for each algorithm and compares averages and variation. | Must |
+| The program records generation time. | It reports how long each maze took to generate. | Should |
+| The program displays a simple maze visualization. | The user can view a generated maze as a grid. | Should |
 
-## 8. Expected Results
-The project is expected to produce working maze generators, automatic measurement functions, a proposed difficulty model, and experimental comparisons showing how algorithms and parameters affect maze structure and estimated difficulty.
+**Priority:** **Must** = required; **Should** = useful if time allows.
 
-## 9. Limitations
-The project will focus on 2D grid mazes, not a complete playable game. The difficulty score will not be assumed to predict every human player's experience.
+## 4. Business rules and constraints
+
+| Rule or constraint | Reason |
+| --- | --- |
+| Mazes use a 2D grid of cells and walls. | Keeps generation and measurement simple. |
+| Every generated maze has a defined start and exit. | Makes shortest-path measurement possible. |
+| Both algorithms are tested using the same maze sizes and evaluation methods. | Makes comparisons fair. |
+| The random seed is recorded for each maze. | Allows a result to be reproduced. |
+| The difficulty score is an estimate, not a proven measure of human difficulty. | Maze difficulty can depend on the player and solving method. |
+| The project focuses on generating and evaluating mazes, not building a full game. | Keeps the project manageable. |
+
+## 5. User interface and workflow
+
+The first version will use a simple Python interface, such as text input and printed results. The user chooses an algorithm, maze size, and random seed. The program generates the maze, measures its structure, and displays the results. The user can also run a batch of mazes to compare Recursive Backtracking and Randomized Prim. A simple grid drawing may be added to make the results easier to understand.
+
+## 6. Non-functional requirements
+
+| Requirement | How it will be verified |
+| --- | --- |
+| Repeating a run with the same algorithm, settings, and seed produces the same maze. | Run the same inputs twice and compare the generated grids. |
+| Measurements are calculated consistently. | Test small mazes where the shortest path and dead ends can be checked manually. |
+| Invalid inputs are handled clearly. | Try an invalid maze size and check that the program reports an understandable error. |
+| Comparison results can be repeated. | Save the settings and seeds used, then rerun the comparison. |
+| The code is easy to understand and maintain. | Keep generation, measurement, and comparison in separate Python functions. |
+
+## 7. Open questions and risks
+
+| Question / risk | Impact | Owner | Resolution / decision |
+| --- | --- | --- | --- |
+| How should the difficulty score be calculated? | Different formulas may give different rankings. | Student | Start with a simple formula using selected measurements; explain its limitations. |
+| Does the score reflect actual solving effort? | A structural score may not match how hard a maze is to solve. | Student | Compare the score with the effort required by one clearly defined solving method. |
+| How many mazes are enough for comparison? | Too few examples may give misleading results. | Student | Start with 100 mazes per algorithm for each tested configuration and compare averages and variation. |
+| How should the algorithms' optional settings be handled? | Different settings may change maze structure. | Student | First compare both algorithms with basic settings; add one simple variation only if feasible. |
